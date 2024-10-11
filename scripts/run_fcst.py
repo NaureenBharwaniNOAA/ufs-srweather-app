@@ -12,7 +12,6 @@ from argparse import ArgumentParser
 from copy import deepcopy
 from pathlib import Path
 
-from uwtools.api.fs import link as uwlink
 from uwtools.api.logging import use_uwtools_logger
 from uwtools.api.fv3 import FV3
 from uwtools.api.config import get_yaml_config
