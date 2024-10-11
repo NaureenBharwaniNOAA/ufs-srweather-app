@@ -142,17 +142,12 @@ metatask_run_ensemble:
 
   task_run_fcst_mem#mem#:
     <<: *default_task
-    command: '&LOAD_MODULES_RUN_TASK; "run_fcst" "&JOBSdir;/JREGIONAL_RUN_FCST"'
-    envars:
-      <<: *default_vars
-      SLASH_ENSMEM_SUBDIR: '&SLASH_ENSMEM_SUBDIR;'
-      nprocs:
+    command: !cycstr 'source &USHdir;/load_modules_wflow.sh {{ user.MACHINE }} ; &SCRIPTSdir;/run_fcst.py' 
     join: !cycstr '&LOGDIR;/{{ jobname }}_@Y@m@d@H&LOGEXT;'
-    nnodes: '{{ task_run_fcst.NNODES_RUN_FCST // 1 }}'
+    nodes: '{{ task_run_fcst.run_fcst.execution.batchargs.nodes }}:ppn={{ task_run_fcst.run_fcst.execution.batchargs.tasks_per_node }}'
     partition: '{% if platform.get("PARTITION_FCST") %}&PARTITION_FCST;{% else %}None{% endif %}'
-    ppn: '{{ task_run_fcst.PPN_RUN_FCST // 1 }}'
     queue: '&QUEUE_FCST;'
-    walltime: 04:30:00
+    walltime: 04:30:00 
     dependency:
       and:
         taskdep_make_ics:
