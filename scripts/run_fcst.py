@@ -29,26 +29,6 @@ def link_files(dest_dir, files):
         logging.info(f"Linking {linkname} -> {path}")
         linkname.symlink_to(path)
 
-def _walk_key_path(config, key_path):
-    """
-    Navigate to the sub-config at the end of the path of given keys.
-    """
-    keys = []
-    pathstr = "<unknown>"
-    for key in key_path:
-        keys.append(key)
-        pathstr = " -> ".join(keys)
-        try:
-            subconfig = config[key]
-        except KeyError:
-            logging.error(f"Bad config path: {pathstr}")
-            raise
-        if not isinstance(subconfig, dict):
-            logging.error(f"Value at {pathstr} must be a dictionary")
-            sys.exit(1)
-        config = subconfig
-    return config
-
 def parse_args(argv):
     """
     Parse arguments for the script.
@@ -127,7 +107,7 @@ if __name__ == "__main__":
     use_uwtools_logger()
 
     args = parse_args(sys.argv[1:])
-    run_fv3(
+    run_fcst(
         config_file=args.config_file,
         cycle=args.cycle,
         key_path=args.key_path,

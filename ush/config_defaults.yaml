@@ -1471,8 +1471,8 @@ task_make_sfc_climo:
         stdout: "{{ user.HOMEdir }}/scripts"
         walltime: 00:05:00
       envcmds:
-        - module load build_{{ user.MACHINE|lower() }}_{{ workflow.COMPILER }}
         - module use {{ user.HOMEdir }}/modulefiles
+        - module load build_{{ user.MACHINE|lower() }}_{{ workflow.COMPILER }}
       executable: "{{ user.EXECdir }}/sfc_climo_gen"
       mpicmd: '{{ platform.BATCH_RUN_CMD }}'
     namelist:
@@ -1756,8 +1756,25 @@ task_make_lbcs:
 #-----------------------------
 task_run_fcst:
   # UW Placeholder additions
-  rundir: '{{ workflow.EXPTDIR }}/{{ timevars.yyyymmddhh }}{{ "/mem%s" % ("MEMBER"|env) if global.DO_ENSEMBLE }}'
+  fv3:
+    execution:
+      batchargs:
+        walltime: 00:10:00
+      executable: '{{ user.EXECdir }}/run_fcst' 
+      mpiargs:
+        - "--export=NONE"
+      mpicmd: '{{ platform.BATCH_RUN_CMD }}' 
+      threads: 1
+    namelist:
+      base_file: /path/to/base/input.nml
+      update_values:
+        fv_core_nml:
+          k_split: 2
+          n_split: 6
+      validate: true
+    rundir: '{{ workflow.EXPTDIR }}/run_fcst'
   #------------------------------------------------------------------------
+  #
   #
   # NNODES_RUN_FCST: 
   # The number of nodes to request from the job scheduler 

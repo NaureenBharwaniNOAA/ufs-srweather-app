@@ -142,7 +142,11 @@ metatask_run_ensemble:
 
   task_run_fcst_mem#mem#:
     <<: *default_task
-    command: !cycstr 'source &USHdir;/load_modules_wflow.sh {{ user.MACHINE }} ; &SCRIPTSdir;/run_fcst.py' 
+    command: !cycstr 'source &USHdir;/load_modules_wflow.sh {{ user.MACHINE }} ; &SCRIPTSdir;/run_fcst.py 
+      -c &GLOBAL_VAR_DEFNS_FP;
+      --cycle @Y-@m-@dT@H:@M:@S
+      --key-path task_run_fcst
+      --mem #mem#'
     join: !cycstr '&LOGDIR;/{{ jobname }}_@Y@m@d@H&LOGEXT;'
     nodes: '{{ task_run_fcst.run_fcst.execution.batchargs.nodes }}:ppn={{ task_run_fcst.run_fcst.execution.batchargs.tasks_per_node }}'
     partition: '{% if platform.get("PARTITION_FCST") %}&PARTITION_FCST;{% else %}None{% endif %}'

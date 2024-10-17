@@ -10,7 +10,6 @@ from argparse import ArgumentParser
 from pathlib import Path
 
 from uwtools.api.config import get_yaml_config
-from uwtools.api.fs import link as uwlink
 from uwtools.api.logging import use_uwtools_logger
 from uwtools.api.sfc_climo_gen import SfcClimoGen 
 
