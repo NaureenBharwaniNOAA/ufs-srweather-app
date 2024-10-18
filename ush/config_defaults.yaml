@@ -1755,8 +1755,13 @@ task_make_lbcs:
 # IO_LAYOUT_Y FORECAST config parameters
 #-----------------------------
 task_run_fcst:
-  # UW Placeholder additions
   fv3:
+    diag_table: 
+      template_file: '{{ workflow.DIAG_TABLE_TMPL_FP }}'
+      template_values:
+        starttime: '{{ timevars.yyyymmddhh }}'
+        cres: "{{ 'CRES' | env }}"
+    domain: regional
     execution:
       batchargs:
         walltime: 00:10:00
@@ -1765,6 +1770,24 @@ task_run_fcst:
         - "--export=NONE"
       mpicmd: '{{ platform.BATCH_RUN_CMD }}' 
       threads: 1
+    field_table:
+      base_file: /path/to/field_table_to_use
+    files_to_copy:
+      INPUT/gfs_ctrl.nc: '{{ DATA }}/INPUT/gfs_ctrl.nc'
+      INPUT/gfs_data.nc: '{{ DATA }}/INPUT/gfs_data.nc'
+      INPUT/sfc_data.nc: '{{ DATA }}/INPUT/sfc_data.nc'
+    files_to_link:
+      co2historicaldata_2010.txt: src/uwtools/drivers/global_co2historicaldata_2010.txt
+      co2historicaldata_2011.txt: src/uwtools/drivers/global_co2historicaldata_2011.txt
+    lateral_boundary_conditions:
+      interval_hours: 3
+      offset: 0
+      path: gfs_bndy.tile{tile}.f{forecast_hour}.nc
+    length: 12
+    model_configure:
+      base_file: '{{ user.USHdir }}/create_model_configure_file.py' 
+      update_values:
+        write_dopost: .false.
     namelist:
       base_file: /path/to/base/input.nml
       update_values:
