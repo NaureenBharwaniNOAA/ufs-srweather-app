@@ -1780,9 +1780,9 @@ task_run_fcst:
       co2historicaldata_2010.txt: src/uwtools/drivers/global_co2historicaldata_2010.txt
       co2historicaldata_2011.txt: src/uwtools/drivers/global_co2historicaldata_2011.txt
     lateral_boundary_conditions:
-      interval_hours: 3
-      offset: 0
-      path: gfs_bndy.tile{tile}.f{forecast_hour}.nc
+      interval_hours: 1 
+      offset: 3 
+      path: '{{ task_run_fcst.fv3.rundir }}/INPUT/{{ nco.NET_default }}.{{ cycle }}{{ "dot_ensmem" | env  }}.gfs_bndy.tile{{ constants.TILE_RGNL }}.f{{ task_run_fcst.fv3.lateral_boundary_conditions.offset }}.nc' 
     length: 12
     model_configure:
       base_file: '{{ user.USHdir }}/create_model_configure_file.py' 
