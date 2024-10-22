@@ -71,8 +71,9 @@ def run_fcst(config_file, cycle, key_path, member):
     """
     expt_config = get_yaml_config(config_file)
 
-    # The experiment config will have {{ MEMBER | env }} expressions in it that need to be
-    # dereferenced during driver initialization.
+    # The experiment config will have {{ CRES | env }} and {{ MEMBER | env }} expressions in it that need to be
+    # dereferenced during driver initialization
+    os.environ["CRES"] = expt_config["workflow"]["CRES"]
     os.environ["MEMBER"] = member
 
     # Run the FV3 program via UW driver

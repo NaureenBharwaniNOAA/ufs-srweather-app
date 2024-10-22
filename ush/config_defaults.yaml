@@ -1759,7 +1759,7 @@ task_run_fcst:
     diag_table: 
       template_file: '{{ workflow.DIAG_TABLE_TMPL_FP }}'
       template_values:
-        starttime: '{{ cycle }}'
+        starttime: '{{ timevars.yyyymmddhh }}' 
         cres: "{{ 'CRES' | env }}"
     domain: regional
     execution:
