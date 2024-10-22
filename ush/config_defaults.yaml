@@ -1759,7 +1759,7 @@ task_run_fcst:
     diag_table: 
       template_file: '{{ workflow.DIAG_TABLE_TMPL_FP }}'
       template_values:
-        starttime: '{{ timevars.yyyymmddhh }}'
+        starttime: '{{ cycle }}'
         cres: "{{ 'CRES' | env }}"
     domain: regional
     execution:
@@ -1771,11 +1771,11 @@ task_run_fcst:
       mpicmd: '{{ platform.BATCH_RUN_CMD }}' 
       threads: 1
     field_table:
-      base_file: /path/to/field_table_to_use
+      base_file: '{{ workflow.FIELD_TABLE_FP }}'
     files_to_copy:
-      INPUT/gfs_ctrl.nc: '{{ DATA }}/INPUT/gfs_ctrl.nc'
-      INPUT/gfs_data.nc: '{{ DATA }}/INPUT/gfs_data.nc'
-      INPUT/sfc_data.nc: '{{ DATA }}/INPUT/sfc_data.nc'
+      INPUT/gfs_ctrl.nc: '{{ task_run_fcst.fv3.rundir }}/INPUT/{{ nco.NET_default }}.{{ cycle }}{{ "dot_ensmem" | env  }}.gfs_ctrl.nc'
+      INPUT/gfs_data.nc: '{{ task_run_fcst.fv.rundir }}/INPUT/{{ nco.NET_default }}.{{ cycle }}{{ "dot_ensmem" | env }}.gfs_data.tile{{ constants.TILE_RGNL }}.halo{{ constants.NH0 }}.nc'
+      INPUT/sfc_data.nc: '{{ task_run_fcst.fv.rundir }}/INPUT/{{ nco.NET_default }}.{{ cycle }}{{ "dot_ensmem" | env }}.sfc_data.tile{{ constants.TILE_RGNL }}.halo{{ constants.NH0 }}.nc'
     files_to_link:
       co2historicaldata_2010.txt: src/uwtools/drivers/global_co2historicaldata_2010.txt
       co2historicaldata_2011.txt: src/uwtools/drivers/global_co2historicaldata_2011.txt
